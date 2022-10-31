@@ -1,0 +1,32 @@
+---
+title: "secondTask"
+author: "Semen Khomets"
+date: "2022-10-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+***
+Устанавливаю абсолютный путь до директории с данными:
+```{r warning=FALSE}
+setwd("C:\\Proteomics")
+```
+***
+Функция создаёт новый датафрейм, объединяя датафреймы по столбцу id пациента(новый датафрейм включает только тех пациентов, которые были во всех семи датафреймах), далее из датафрейма убираем столбец id, считаем средние значения и записываем в результирующую таблицу:
+```{r warning=FALSE}
+get_id <- function(dfs){
+  new_df <- Reduce(function(x, y) merge(x, y, by='id'), dfs)
+  result <- data.frame(id=new_df$id, mean_temp=rowMeans(new_df[, -1]))
+  return(result)
+}
+```
+***
+Исполняемый код - считываем данные, получаем измененную таблицу, печатаем ответ:
+```{r warning=FALSE}
+load("data\\lab1_e2.Rdata")
+result_table <- get_id(all_data)
+print(result_table)
+```

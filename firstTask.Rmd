@@ -1,0 +1,46 @@
+---
+title: "firstLab_task1"
+author: "Semen Khomets"
+date: "2022-10-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+***
+Устанавливаю абсолютный путь до директории с данными:
+```{r warning=FALSE}
+setwd("C:\\Proteomics")
+```
+***
+Функция изменяет столбец. В новом столбце удаляем пробел и преобразуем его в числовой формат. Затем если получили хотя бы одно значение **NA**, то исходный столбец содержал строки и не подлежит изменению - следовательно возвращаем его же, иначе - новый измененный столбец:
+```{r warning=FALSE}
+fix_column <- function(column){
+  fixed_column <- sub(' ', '', column)
+  fixed_column <- as.numeric(fixed_column)
+  if(any(is.na(fixed_column))){
+    return(column)
+  }else{
+  return(fixed_column)
+  }
+}
+```
+***
+Функция вызывает **fix_column** поочередно для каждого столбца и возвращает преобразованную таблицу:
+```{r warning=FALSE}
+fix_data <- function(df){
+  fixed_df <- lapply(df, fix_column)
+  return(data.frame(fixed_df))
+}
+```
+***
+Исполняемый код - считываем данные, получаем измененную таблицу, печатаем ответ: 
+```{r warning=FALSE}
+df <- read.csv(file = "data\\lab1_e1.csv")
+fixed_df <- fix_data(df)
+print(fixed_df)
+```
+
+
+
